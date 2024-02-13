@@ -38,9 +38,9 @@ int hillClimbing(int max_it, int g) {
         cout << "The First Value Was The Top of The Hill." << endl;
         return hillArray[0];
     } else {
-        while ( (t < max_it) && (t < hillArrayLength ) ) { // Iterates over the space, stopping if you reach the max amount of steps or the highest point
+        while ( (t < max_it) && (t < hillArrayLength - 1 ) ) { // Iterates over the space, stopping if you reach the max amount of steps or the highest point
             int currentValue = hillArray[t];
-            int nextValue    = hillArray[t];
+            int nextValue    = hillArray[t + 1];
             if ( currentValue == g ) {
                 return currentValue; // If the current value is the goal, return it
             } else if ( currentValue < nextValue ){
