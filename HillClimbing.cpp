@@ -14,15 +14,17 @@ using namespace std;
 
 // START - Global Variables
 const double PI = 3.14159265358979323846; // Constant variable representing pi relatively accurately
-int hillArrayF[256];
+double hillArrayF[256];
 double hillArrayG[256];
 // STOP  - Global Variables
 
 
 
 // START - Supporting Functions
-int f(int x) { // f(x) = sin(pi * x / 256) over the range such that 0 <= x <= 255
-    return int(sin(PI * x / 256) * 1000);
+double f(int x) { // f(x) = sin(pi * x / 256) over the range such that 0 <= x <= 255
+    double result = sin(PI * x / 256); // Find f(x)
+    result = std::floor(result * 100000 + 0.5) / 100000; // Round to 5 decimal points
+    return result;
 } // End of f(x)
 
 double g(double x) {
@@ -59,6 +61,16 @@ double findGoalForG() { // Function to find the goal for the HillArrayG array us
     }
     return goal;
 } // End of findGoalForG function
+
+double findGoalForF() { // Function to find the goal for the HillArrayG array using basic brute force algorithm
+    double goal = 0;
+    for (int x = 0; x <= 255; ++x) {
+        if ( f(x) > goal ) {
+            goal = f(x);
+        }
+    }
+    return goal;
+} // End of findGoalForG function
 // STOP - Supporting Functions
 
 
@@ -67,10 +79,10 @@ double findGoalForG() { // Function to find the goal for the HillArrayG array us
     // HILL CLIMBING Algorithm # 1:
     // max_it : max iterations
     // g      : goal (highest value, the top of hill)
-int hillClimbing(int max_it, int g) { // FIRST ALGORITHM
+double hillClimbing(int max_it, int g) { // FIRST ALGORITHM
     // START - Init. Vars
     int t = 1; // Init. loop var to 1
-    int returnValue = 0; // Init. the return variable to 0
+    double returnValue = 0; // Init. the return variable to 0
     int hillArrayLength = sizeof(hillArrayF) / sizeof(hillArrayF[0]); // Length of the hill array using 'sizeof'
     // STOP  - Init. Vars
 
@@ -79,8 +91,8 @@ int hillClimbing(int max_it, int g) { // FIRST ALGORITHM
         return hillArrayF[0];
     } else {
         while ( (t < max_it) && (t < hillArrayLength - 1 ) ) { // Iterates over the space, stopping if you reach the max amount of steps or the highest point
-            int currentValue = hillArrayF[t];
-            int nextValue    = hillArrayF[t + 1];
+            double currentValue = hillArrayF[t];
+            double nextValue    = hillArrayF[t + 1];
             if ( currentValue == g ) {
                 return currentValue; // If the current value is the goal, return it
             } else if ( currentValue < nextValue ){
@@ -90,6 +102,8 @@ int hillClimbing(int max_it, int g) { // FIRST ALGORITHM
         }
     }
 } // End of hillClimbing Function
+
+
 
 // STOP  - Hill Climbing Algorithms
 
@@ -122,11 +136,14 @@ int main() {
         cout << hillArrayG[x] << " "; // No 'endl' so that it prints in one line
     }
 
-    int topOfTheHill = hillClimbing(250, 1000); // Runs the function with 200 as the max iterations and 1000 being the goal
-    cout << endl << "The top of the hill is at: " << topOfTheHill << "ft." << endl; // Prints the results to the console
+    double topOfTheHill = hillClimbing(255, 1); // Runs the function with 200 as the max iterations and 1000 being the goal
+    cout << endl << "The top of the hill is at: " << topOfTheHill << " ft." << endl; // Prints the results to the console
 
     double Ggoal = findGoalForG();
     cout << endl << "G's Goal: " << Ggoal << endl;
+
+    double Fgoal = findGoalForF();
+    cout << endl << "F's Goal: " << Fgoal << endl;
     return 0;
 } // End of main function
 // STOP  - Main
