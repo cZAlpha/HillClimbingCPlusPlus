@@ -1,0 +1,15 @@
+    // This code that is commented out is an example that visualizes how the hillArray array is populated
+    // through the use of the console.
+//    cout << "Blank Array:" << endl;
+//
+//    for (int x = 0; x < 255; ++x) { // Print values of the BLANK array to the console
+//        cout << hillArray[x] << " "; // No 'endl' so that it prints in one line
+//    }
+//
+//    makeValues(); // Populates the hill array
+//
+//    cout << endl << "Full Array:" << endl;
+//
+//    for (int x = 0; x < 255; ++x) { // Print values of the FULL array to the console
+//        cout << hillArray[x] << " "; // No 'endl' so that it prints in one line
+//    }
