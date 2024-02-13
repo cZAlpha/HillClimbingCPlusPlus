@@ -18,8 +18,10 @@ int hillArrayF[256];
 double hillArrayG[256];
 // STOP  - Global Variables
 
+
+
 // START - Supporting Functions
-int f(int x) {
+int f(int x) { // f(x) = sin(pi * x / 256) over the range such that 0 <= x <= 255
     return int(sin(PI * x / 256) * 1000);
 } // End of f(x)
 
@@ -47,7 +49,7 @@ int* makeValuesG() { // Function that generates the list of f(x) outputs from th
         }
 } // End of makeValues function
 
-double findGoalForG(double* HillArrayG) { // Function to find the goal for the HillArrayG array
+double findGoalForG() { // Function to find the goal for the HillArrayG array using basic brute force algorithm
     double goal = 0;
     for (int x = 0; x <= 255; ++x) {
         double gVal = x * 0.00390625; // Finds the applicable value between 0-256 for g(x)
@@ -61,11 +63,11 @@ double findGoalForG(double* HillArrayG) { // Function to find the goal for the H
 
 
 
-// HILL CLIMBING ASSIGNMENT:
-// f(x) = sin(pi * x / 256) over the range such that 0 <= x <= 255
-// max_it : max iterations
-// g      : goal (highest value, the top of hill)
-int hillClimbing(int max_it, int g) {
+// START - Hill Climbing Algorithms
+    // HILL CLIMBING Algorithm # 1:
+    // max_it : max iterations
+    // g      : goal (highest value, the top of hill)
+int hillClimbing(int max_it, int g) { // FIRST ALGORITHM
     // START - Init. Vars
     int t = 1; // Init. loop var to 1
     int returnValue = 0; // Init. the return variable to 0
@@ -89,6 +91,11 @@ int hillClimbing(int max_it, int g) {
     }
 } // End of hillClimbing Function
 
+// STOP  - Hill Climbing Algorithms
+
+
+
+// START - Main
 int main() {
     cout << "Main Function Has Started..." << endl;
 
@@ -118,7 +125,8 @@ int main() {
     int topOfTheHill = hillClimbing(250, 1000); // Runs the function with 200 as the max iterations and 1000 being the goal
     cout << endl << "The top of the hill is at: " << topOfTheHill << "ft." << endl; // Prints the results to the console
 
-    double Ggoal = findGoalForG(hillArrayG);
+    double Ggoal = findGoalForG();
     cout << endl << "G's Goal: " << Ggoal << endl;
     return 0;
 } // End of main function
+// STOP  - Main
