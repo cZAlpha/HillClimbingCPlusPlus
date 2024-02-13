@@ -79,20 +79,19 @@ double findGoalForF() { // Function to find the goal for the HillArrayG array us
     // HILL CLIMBING Algorithm # 1:
     // max_it : max iterations
     // g      : goal (highest value, the top of hill)
-double hillClimbing(int max_it, int g) { // FIRST ALGORITHM
+double hillClimbing(int max_it, double g, double *hillArray) { // FIRST ALGORITHM
     // START - Init. Vars
     int t = 1; // Init. loop var to 1
-    double returnValue = 0; // Init. the return variable to 0
-    int hillArrayLength = sizeof(hillArrayF) / sizeof(hillArrayF[0]); // Length of the hill array using 'sizeof'
+    int hillArrayLength = sizeof(hillArray) / sizeof(hillArray[0]); // Length of the hill array using 'sizeof'
     // STOP  - Init. Vars
 
-    if ( hillArrayF[0] == g ) { // If the first spot is the top of the hill
+    if ( hillArray[0] == g ) { // If the first spot is the top of the hill
         cout << "The First Value Was The Top of The Hill." << endl;
-        return hillArrayF[0];
+        return hillArray[0];
     } else {
         while ( (t < max_it) && (t < hillArrayLength - 1 ) ) { // Iterates over the space, stopping if you reach the max amount of steps or the highest point
-            double currentValue = hillArrayF[t];
-            double nextValue    = hillArrayF[t + 1];
+            double currentValue = hillArray[t];
+            double nextValue    = hillArray[t + 1];
             if ( currentValue == g ) {
                 return currentValue; // If the current value is the goal, return it
             } else if ( currentValue < nextValue ){
@@ -136,14 +135,19 @@ int main() {
         cout << hillArrayG[x] << " "; // No 'endl' so that it prints in one line
     }
 
-    double topOfTheHill = hillClimbing(255, 1); // Runs the function with 200 as the max iterations and 1000 being the goal
-    cout << endl << "The top of the hill is at: " << topOfTheHill << " ft." << endl; // Prints the results to the console
+    cout << endl; // Blank space
 
+    // First Algorithm On f(x) and g(x) hills:
+    double topOfFHillUsingFirstAlg = hillClimbing(255, findGoalForF(),       hillArrayF); // Runs the function with 200 as the max iterations and 1000 being the goal
+    cout << endl << "(ALG. 1) The top of the f(x) hill is at: " << topOfFHillUsingFirstAlg << " ft." << endl; // Prints the results to the console
+    double topOfGHillUsingFirstAlg = hillClimbing(255, findGoalForG(), hillArrayG); // Runs the function with 200 as the max iterations and 1000 being the goal
+    cout << endl << "(ALG. 1) The top of the g(x) hill is at: " << topOfGHillUsingFirstAlg << " ft." << endl; // Prints the results to the console
+    // Finds and displays the goals for f and g
+    double Fgoal = findGoalForF();
+    cout << endl << "F's Goal: " << Fgoal;
     double Ggoal = findGoalForG();
     cout << endl << "G's Goal: " << Ggoal << endl;
 
-    double Fgoal = findGoalForF();
-    cout << endl << "F's Goal: " << Fgoal << endl;
     return 0;
 } // End of main function
 // STOP  - Main
