@@ -4,4 +4,5 @@ project(HillClimbingCPlusPlus)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(HillClimbingCPlusPlus
-        HillClimbing.cpp)
+        HillClimbing.cpp
+)
