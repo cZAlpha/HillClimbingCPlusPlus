@@ -6,6 +6,7 @@
 #include <iostream>
 #include <cmath> // For the math involved in the function given for the assignment
 #include <iomanip> // Include the header for setprecision
+#include <random>
 // STOP  - Imports
 
 // START - Namespaces
@@ -51,6 +52,16 @@ int* makeValuesG() { // Function that generates the list of f(x) outputs from th
         }
 } // End of makeValues function
 
+double findGoalForF() { // Function to find the goal for the HillArrayG array using basic brute force algorithm
+    double goal = 0;
+    for (int x = 0; x <= 255; ++x) {
+        if ( f(x) > goal ) {
+            goal = f(x);
+        }
+    }
+    return goal;
+} // End of findGoalForG function
+
 double findGoalForG() { // Function to find the goal for the HillArrayG array using basic brute force algorithm
     double goal = 0;
     for (int x = 0; x <= 255; ++x) {
@@ -62,15 +73,20 @@ double findGoalForG() { // Function to find the goal for the HillArrayG array us
     return goal;
 } // End of findGoalForG function
 
-double findGoalForF() { // Function to find the goal for the HillArrayG array using basic brute force algorithm
-    double goal = 0;
-    for (int x = 0; x <= 255; ++x) {
-        if ( f(x) > goal ) {
-            goal = f(x);
-        }
-    }
-    return goal;
-} // End of findGoalForG function
+double randomBetweenZeroAndOne() {
+    // Create a random number engine
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<double> dis(0.0, 1.0);
+
+    // Generate a random double between 0 and 1
+    return dis(gen);
+}
+
+bool findPhi(double currentVal, double nextVal, double T) {
+    double randNum = randomBetweenZeroAndOne(); // Random number
+    return randNum < (1 / (1 + exp( (currentVal - nextVal) / (T) ) ) );
+} // This function calculates Phi to simplify the stochastic hill clim
 // STOP - Supporting Functions
 
 
@@ -81,29 +97,50 @@ double findGoalForF() { // Function to find the goal for the HillArrayG array us
     // g      : goal (highest value, the top of hill)
 double hillClimbing(int max_it, double g, double *hillArray) { // FIRST ALGORITHM
     // START - Init. Vars
-    int t = 1; // Init. loop var to 1
+    int t = 0; // Init. loop var to 1
     int hillArrayLength = sizeof(hillArray) / sizeof(hillArray[0]); // Length of the hill array using 'sizeof'
     // STOP  - Init. Vars
 
-    if ( hillArray[0] == g ) { // If the first spot is the top of the hill
+    if ( hillArray[0] == g ) { // If the first spot is the top of the hill (this should never be true if only running this function by itself)
         cout << "The First Value Was The Top of The Hill." << endl;
         return hillArray[0];
-    } else {
+    } else { // If the first spot was not the top of the hill
         while ( (t < max_it) && (t < hillArrayLength - 1 ) ) { // Iterates over the space, stopping if you reach the max amount of steps or the highest point
-            double currentValue = hillArray[t];
-            double nextValue    = hillArray[t + 1];
-            if ( currentValue == g ) {
-                return currentValue; // If the current value is the goal, return it
-            } else if ( currentValue < nextValue ){
-                currentValue = nextValue; // If current value is smaller than the next value, set the current value to the next value
-            }
+            double currentValue = hillArray[t];     // x
+            double nextValue    = hillArray[t + 1]; // x' (next x)
+            if ( currentValue == g ) { return currentValue; } // If the current value is the goal, return it
+            else if ( currentValue < nextValue ){ currentValue = nextValue; } // If current value is smaller than the next value, set the current value to the next value
             t++; // Increment t by 1
         }
     }
 } // End of hillClimbing Function
 
+double iterativeHillClimbing(int n_start, int max_it, double g, double *hillArray) { // Second algorithm ; Iterative Hill Climbing
+    // START - Init. Variables
+    double best = 0; // Return Variable
+    int    loopVar = 0; // Loop Variable
+    // STOP  - Init. Variables
+    while ( (loopVar < n_start) and (best != g) ) {
+        double hillHeight = hillClimbing(max_it, g, hillArray); // Runs the first algorithm
+        loopVar++; // Increments loop variable
+        if (hillHeight > best) {
+            best = hillHeight;
+        }
+    }
+} // End of Iterative Hill Climbing Function
 
-
+double stochasticHillClimbing(int max_it, double T, double g, double *hillArray) {
+    double currentValue;
+    double nextValue;
+    int    loopVar = 0;
+    while ( (loopVar < (max_it-1)) and (currentValue != g) ) {
+        currentValue = hillArray[loopVar];
+        nextValue    = hillArray[loopVar + 1];
+        if ( findPhi(currentValue, nextValue, T) ) { currentValue = nextValue; } // Swap currentValue and nextValue based on Phi
+        loopVar++;
+    } // End of while loop
+    return currentValue;
+} // End of Stochastic Hill Climbing Function
 // STOP  - Hill Climbing Algorithms
 
 
@@ -118,7 +155,7 @@ int main() {
     for (int x = 0; x < 255; ++x) { // Print values of the BLANK array to the console
         cout << hillArrayF[x] << " "; // No 'endl' so that it prints in one line
     }
-    cout << "Blank Array g(x):" << endl;
+    cout << endl << "Blank Array g(x):" << endl;
     for (int x = 0; x < 255; ++x) { // Print values of the BLANK array to the console
         cout << hillArrayG[x] << " "; // No 'endl' so that it prints in one line
     }
@@ -138,16 +175,28 @@ int main() {
     cout << endl; // Blank space
 
     // First Algorithm On f(x) and g(x) hills:
-    double topOfFHillUsingFirstAlg = hillClimbing(255, findGoalForF(),       hillArrayF); // Runs the function with 200 as the max iterations and 1000 being the goal
+    double topOfFHillUsingFirstAlg = hillClimbing(255, findGoalForF(), hillArrayF); // Runs the function with 200 as the max iterations and 1000 being the goal
     cout << endl << "(ALG. 1) The top of the f(x) hill is at: " << topOfFHillUsingFirstAlg << " ft." << endl; // Prints the results to the console
     double topOfGHillUsingFirstAlg = hillClimbing(255, findGoalForG(), hillArrayG); // Runs the function with 200 as the max iterations and 1000 being the goal
     cout << endl << "(ALG. 1) The top of the g(x) hill is at: " << topOfGHillUsingFirstAlg << " ft." << endl; // Prints the results to the console
+
+    // Second Algorithm on f(x) and g(x) hills:
+    double topOfFHillUsingSecondAlg = iterativeHillClimbing(0, 255, findGoalForF(), hillArrayF);
+    cout << endl << "(ALG. 2) The top of the f(x) hill is at: " << topOfFHillUsingSecondAlg << " ft." << endl; // Prints the results to the console
+    double topOfGHillUsingSecondAlg = iterativeHillClimbing(0, 255, findGoalForG(), hillArrayG);
+    cout << endl << "(ALG. 2) The top of the g(x) hill is at: " << topOfGHillUsingSecondAlg << " ft." << endl; // Prints the results to the console
+
+    // Third Algorithm on f(x) and g(x) hills:
+    double topOfFHillUsingThirdAlg = stochasticHillClimbing(255, 1, findGoalForF(), hillArrayF);
+    cout << endl << "(ALG. 3) The top of the f(x) hill is at: " << topOfFHillUsingThirdAlg << " ft." << endl; // Prints the results to the console
+    double topOfGHillUsingThirdAlg = stochasticHillClimbing(255, 1, findGoalForG(), hillArrayG);
+    cout << endl << "(ALG. 3) The top of the g(x) hill is at: " << topOfGHillUsingThirdAlg << " ft." << endl; // Prints the results to the console
+
+
     // Finds and displays the goals for f and g
     double Fgoal = findGoalForF();
     cout << endl << "F's Goal: " << Fgoal;
     double Ggoal = findGoalForG();
     cout << endl << "G's Goal: " << Ggoal << endl;
-
-    return 0;
 } // End of main function
 // STOP  - Main
