@@ -5,8 +5,7 @@
 // START - Imports
 #include <iostream>
 #include <cmath> // For the math involved in the function given for the assignment
-#include <iomanip> // Include the header for setprecision
-#include <random>
+#include <random> // For pseudo random number generator
 // STOP  - Imports
 
 // START - Namespaces
