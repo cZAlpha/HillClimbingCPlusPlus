@@ -145,6 +145,36 @@ double stochasticHillClimbing(int max_it, double T, double g, double *hillArray)
     } // End of while loop
     return currentValue;
 } // End of Stochastic Hill Climbing Function
+// STOP  - Hill Climbing Algorithms
+
+
+
+// START - Accuracy Determining Functions
+double findAccuracyOfHillClimbing(int timesToRun) {
+    double wrongCounter = 0; // # of times the function returned the wrong value
+
+    for ( int i = 0 ; i <= timesToRun ; i++ ) {
+        double topOfFHillUsingFirstAlg = hillClimbing(255, findGoalForF(), hillArrayF);
+        double topOfGHillUsingFirstAlg = hillClimbing(255, findGoalForG(), hillArrayG);
+        if ( topOfFHillUsingFirstAlg != findGoalForF() ) { wrongCounter++; }
+        if ( topOfGHillUsingFirstAlg != findGoalForG() ) { wrongCounter++; }
+    }
+
+    return wrongCounter / (timesToRun * 2); // Percent of misses (Multiply timesToRun * 2 due to running the function twice per loop cycle)
+}
+
+double findAccuracyOfIterativeHillClimbing(int timesToRun) {
+    double wrongCounter = 0; // # of times the function returned the wrong value
+
+    for ( int i = 0 ; i <= timesToRun ; i++ ) {
+        double topOfFHillUsingSecondAlg = iterativeHillClimbing(1, 255, findGoalForF(), hillArrayF);
+        double topOfGHillUsingSecondAlg = iterativeHillClimbing(1, 255, findGoalForG(), hillArrayG);
+        if ( topOfFHillUsingSecondAlg != findGoalForF() ) { wrongCounter++; }
+        if ( topOfGHillUsingSecondAlg != findGoalForG() ) { wrongCounter++; }
+    }
+
+    return wrongCounter / (timesToRun * 2); // Percent of misses (Multiply timesToRun * 2 due to running the function twice per loop cycle)
+}
 
 double findAccuracyOfStochasticHillClimbing(int timesToRun) {
     double wrongCounter = 0; // # of times the function returned the wrong value
@@ -152,18 +182,13 @@ double findAccuracyOfStochasticHillClimbing(int timesToRun) {
     for ( int i = 0 ; i <= timesToRun ; i++ ) {
         double topOfFHillUsingThirdAlg = stochasticHillClimbing(255, 1, findGoalForF(), hillArrayF);
         double topOfGHillUsingThirdAlg = stochasticHillClimbing(255, 1, findGoalForG(), hillArrayG);
-
-        if ( topOfFHillUsingThirdAlg != findGoalForF() ) {
-            wrongCounter++;
-        }
-        if ( topOfGHillUsingThirdAlg != findGoalForG() ) {
-            wrongCounter++;
-        }
+        if ( topOfFHillUsingThirdAlg != findGoalForF() ) { wrongCounter++; }
+        if ( topOfGHillUsingThirdAlg != findGoalForG() ) { wrongCounter++; }
     }
 
     return wrongCounter / (timesToRun * 2); // Percent of misses (Multiply timesToRun * 2 due to running the function twice per loop cycle)
 }
-// STOP  - Hill Climbing Algorithms
+// STOP  - Accuracy Determining Functions
 
 
 
@@ -197,22 +222,22 @@ int main() {
     cout << endl; // Blank space
 
     // First Algorithm On f(x) and g(x) hills:
-    double topOfFHillUsingFirstAlg = hillClimbing(255, findGoalForF(), hillArrayF); // Runs the function with 200 as the max iterations and 1000 being the goal
+    double topOfFHillUsingFirstAlg = hillClimbing(255, findGoalForF(), hillArrayF);
     cout << endl << "(ALG. 1) The top of the f(x) hill is at: " << topOfFHillUsingFirstAlg << " ft." << endl; // Prints the results to the console
-    double topOfGHillUsingFirstAlg = hillClimbing(255, findGoalForG(), hillArrayG); // Runs the function with 200 as the max iterations and 1000 being the goal
-    cout << endl << "(ALG. 1) The top of the g(x) hill is at: " << topOfGHillUsingFirstAlg << " ft." << endl; // Prints the results to the console
+    double topOfGHillUsingFirstAlg = hillClimbing(255, findGoalForG(), hillArrayG);
+    cout << "(ALG. 1) The top of the g(x) hill is at: " << topOfGHillUsingFirstAlg << " ft." << endl; // Prints the results to the console
 
     // Second Algorithm on f(x) and g(x) hills:
     double topOfFHillUsingSecondAlg = iterativeHillClimbing(1, 255, findGoalForF(), hillArrayF);
     cout << endl << "(ALG. 2) The top of the f(x) hill is at: " << topOfFHillUsingSecondAlg << " ft." << endl; // Prints the results to the console
     double topOfGHillUsingSecondAlg = iterativeHillClimbing(1, 255, findGoalForG(), hillArrayG);
-    cout << endl << "(ALG. 2) The top of the g(x) hill is at: " << topOfGHillUsingSecondAlg << " ft." << endl; // Prints the results to the console
+    cout << "(ALG. 2) The top of the g(x) hill is at: " << topOfGHillUsingSecondAlg << " ft." << endl; // Prints the results to the console
 
     // Third Algorithm on f(x) and g(x) hills:
     double topOfFHillUsingThirdAlg = stochasticHillClimbing(255, 1, findGoalForF(), hillArrayF);
     cout << endl << "(ALG. 3) The top of the f(x) hill is at: " << topOfFHillUsingThirdAlg << " ft." << endl; // Prints the results to the console
     double topOfGHillUsingThirdAlg = stochasticHillClimbing(255, 1, findGoalForG(), hillArrayG);
-    cout << endl << "(ALG. 3) The top of the g(x) hill is at: " << topOfGHillUsingThirdAlg << " ft." << endl; // Prints the results to the console
+    cout << "(ALG. 3) The top of the g(x) hill is at: " << topOfGHillUsingThirdAlg << " ft." << endl; // Prints the results to the console
 
 
     // Finds and displays the goals for f and g
@@ -221,7 +246,12 @@ int main() {
     double Ggoal = findGoalForG();
     cout << endl << "G's Goal: " << Ggoal << endl;
 
-    double missPercentage = findAccuracyOfStochasticHillClimbing(100);
-    cout << endl << "Miss Percentage Of Stochastic: " << missPercentage << endl;
+    double missPercentageOfFirstAlgorithm = findAccuracyOfHillClimbing(100);
+    double missPercentageOfSecondAlgorithm = findAccuracyOfIterativeHillClimbing(100);
+    double missPercentageOfThirdAlgorithm = findAccuracyOfStochasticHillClimbing(100);
+    cout << endl << "Miss Percentage Of HillClimb:  " << missPercentageOfFirstAlgorithm << endl;
+    cout << "Miss Percentage Of Iterative:  " << missPercentageOfSecondAlgorithm << endl;
+    cout << "Miss Percentage Of Stochastic: " << missPercentageOfThirdAlgorithm << endl;
+
 } // End of main function
 // STOP  - Main
