@@ -312,6 +312,11 @@ double findAccuracyOfStochasticHillClimbing(int timesToRun, double tVal) {
 } // STATIC PARAMETER TESTING
 
 // TO DO:
+// The following functions should determine the accuracy of the given algorithm over the given parameter arrays,
+// In other words: we should populate the (firstAlgorithmOutputFromParameterArray through the thirdAlgorithmOutputFromParameterArray)
+//                 and then iterate over the aforementioned output arrays and output the percentage of wrong answers
+//                 contained within the output arrays, which will effectively return the accuracy of the given
+//                 algorithms over the given varying parameter values.
 // - first  algorithm accuracy finding using the parameter array to dynamically test parameters
 // - second algorithm accuracy finding using the parameter array to dynamically test parameters
 // - third  algorithm accuracy finding using the parameter array to dynamically test parameters
