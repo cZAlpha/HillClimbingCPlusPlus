@@ -15,8 +15,18 @@ using namespace std;
 // START - Global Variables
 const double PI = 3.14159265358979323846; // Constant variable representing pi relatively accurately
 const int ARRAYLENGTH = 256;
+const int PARAMETERARRAYLENGTH = 30;
+    // Hill Arrays
 double hillArrayF[ARRAYLENGTH];
 double hillArrayG[ARRAYLENGTH];
+    // Parameter Value Arrays
+double maxIterationParameterArray[PARAMETERARRAYLENGTH];
+double nStartParameterArray[PARAMETERARRAYLENGTH];
+double tParameterArray[PARAMETERARRAYLENGTH];
+    // Arrays Holding The Values Returned From Each Algorithm Given The Respective Parameters From The Arrays Above
+double firstAlgorithmOutputFromParameterArray[PARAMETERARRAYLENGTH];
+double secondAlgorithmOutputFromParameterArray[PARAMETERARRAYLENGTH];
+double thirdAlgorithmOutputFromParameterArray[PARAMETERARRAYLENGTH];
 // STOP  - Global Variables
 
 
@@ -40,13 +50,13 @@ double g(double x) {
 } // End of g(x)
 
 void makeValuesF() { // Function that generates the list of f(x) outputs from the function below
-    for (int x = 0; x < 255; ++x) { // Iterates from 0-255 as per the requirements of the assignment
+    for (int x = 0 ; x < 255 ; ++x) { // Iterates from 0-255 as per the requirements of the assignment
         hillArrayF[x] = f(x); // Appends the values to the result array hillArrayF
     }
 } // End of makeValueF function
 
 void makeValuesG() { // Function that generates the list of f(x) outputs from the function below
-    for (int x = 0; x <= 255; ++x) { // Iterates from 0-255 as per the requirements of the assignment
+    for (int x = 0 ; x <= 255 ; ++x) { // Iterates from 0-255 as per the requirements of the assignment
         double gVal = x * 0.00390625; // Finds the applicable value between 0-256 for g(x)
         hillArrayG[x] = g(gVal); // Appends the values to the result array hillArrayG
         }
@@ -87,6 +97,61 @@ bool findPhi(double currentVal, double nextVal, double T) {
     double randNum = randomBetweenZeroAndOne(); // Random number
     return randNum < (1 / (1 + exp( (currentVal - nextVal) / (T) ) ) );
 } // This function calculates Phi to simplify the stochastic hill clim
+
+double findTValues(double x) {
+    return 0.0000001 * pow(x, 2); // f(x) = 0.0000001x^(2)
+}
+
+void printHillArrays() {
+    // This code that is commented out is an example that visualizes how the hillArray array is populated
+    // through the use of the console.
+    cout << "Array f(x):" << endl;
+    for (int x = 0; x < 255; ++x) { // Print values of the BLANK array to the console
+        cout << hillArrayF[x] << " "; // No 'endl' so that it prints in one line
+    }
+
+    cout << endl << "Array g(x):" << endl;
+    for (int x = 0; x < 255; ++x) { // Print values of the BLANK array to the console
+        cout << hillArrayG[x] << " "; // No 'endl' so that it prints in one line
+    }
+    cout << endl; // Blank space
+}
+
+void printGivenParameterArray(double* array) {
+    int array_length = sizeof(array) / sizeof(array[0]);
+    cout << "Parameter Array: " << endl;
+    for (int x = 0; x < PARAMETERARRAYLENGTH; ++x) { // Print values of the BLANK array to the console
+        cout << array[x] << " "; // No 'endl' so that it prints in one line
+    }
+    cout << endl;
+}
+
+void printGivenHillArray(double* array) {
+    int array_length = sizeof(array) / sizeof(array[0]);
+    cout << "Hill Array: " << endl;
+    for (int x = 0; x < ARRAYLENGTH; ++x) { // Print values of the BLANK array to the console
+        cout << array[x] << " "; // No 'endl' so that it prints in one line
+    }
+    cout << endl;
+}
+
+void populateMaxIterationParameterArray() {
+    for (int x = 0; x < 256; ++x) { // Iterates from 1-255 as per the requirements of the assignment
+        maxIterationParameterArray[x] = ceil(x * 8.6); // Appends the values to the result array hillArrayF
+    }
+}
+
+void populateNStartParameterArray() {
+    for (int x = 0; x < 256; ++x) { // Iterates from 1-255 as per the requirements of the assignment
+        nStartParameterArray[x] = ceil(x * 8.6); // Appends the values to the result array hillArrayF
+    }
+}
+
+void populateTParameterArray() {
+    for (int x = 0; x < 256; ++x) { // Iterates from 1-255 as per the requirements of the assignment
+        tParameterArray[x] = findTValues(x); // Appends the values to the result array hillArrayF
+    }
+}
 // STOP - Supporting Functions
 
 
@@ -114,7 +179,7 @@ double hillClimbing(int max_it, double g, double* hillArray) { // FIRST ALGORITH
     return currentValue;
 } // End of hillClimbing Function
 
-double iterativeHillClimbing(int n_start, int max_it, double g, double *hillArray) { // Second algorithm ; Iterative Hill Climbing
+double iterativeHillClimbing(int n_start, int max_it, double g, double* hillArray) { // Second algorithm ; Iterative Hill Climbing
     // START - Init. Variables
     double best = 0; // Return Variable
     int    loopVar = 1; // Loop Variable
@@ -129,7 +194,7 @@ double iterativeHillClimbing(int n_start, int max_it, double g, double *hillArra
     return best;
 } // End of Iterative Hill Climbing Function
 
-double stochasticHillClimbing(int max_it, double T, double g, double *hillArray) { // Sometimes returns weird values, not sure why
+double stochasticHillClimbing(int max_it, double T, double g, double* hillArray) { // Sometimes returns weird values, not sure why
     double currentValue;
     double nextValue;
     int    loopVar = 1;
@@ -145,6 +210,67 @@ double stochasticHillClimbing(int max_it, double T, double g, double *hillArray)
 
 
 
+// START - Varying Parameter Algorithm Running Function
+    // For First Algorithm
+void populatefirstAlgorithmOutputFromParameterArrayUsingF() {
+    for (int x = 0; x < 256; ++x) { // Iterates from 1-255 as per the requirements of the assignment
+        firstAlgorithmOutputFromParameterArray[x] = hillClimbing(firstAlgorithmOutputFromParameterArray[x], findGoalForF(), hillArrayF); // Appends the values to the result array hillArrayF
+    }
+}
+
+void populatefirstAlgorithmOutputFromParameterArrayUsingG() {
+    for (int x = 0; x < 256; ++x) { // Iterates from 1-255 as per the requirements of the assignment
+        firstAlgorithmOutputFromParameterArray[x] = hillClimbing(firstAlgorithmOutputFromParameterArray[x], findGoalForG(), hillArrayG); // Appends the values to the result array hillArrayF
+    }
+}
+
+void runHillClimbingVaryParamsOnF() {
+    populateMaxIterationParameterArray(); // Populates the max iter. parameter array for use
+    populatefirstAlgorithmOutputFromParameterArrayUsingF(); // Populates the output array
+    cout << endl << "First Algorithm Output From Varying Parameters On F Hill: " << endl;
+    printGivenParameterArray(firstAlgorithmOutputFromParameterArray); // Prints it
+}
+
+void runHillClimbingVaryParamsOnG() {
+    populateMaxIterationParameterArray(); // Populates the max iter. parameter array for use
+    populatefirstAlgorithmOutputFromParameterArrayUsingG(); // Populates the output array
+    cout << endl << "First Algorithm Output From Varying Parameters On G Hill: " << endl;
+    printGivenParameterArray(firstAlgorithmOutputFromParameterArray); // Prints it
+}
+
+    // For Second Algorithm
+void populatesecondAlgorithmOutputFromParameterArrayUsingF() {
+    for (int x = 0; x < 256; ++x) { // Iterates from 1-255 as per the requirements of the assignment
+        secondAlgorithmOutputFromParameterArray[x] = iterativeHillClimbing(secondAlgorithmOutputFromParameterArray[x], firstAlgorithmOutputFromParameterArray[x], findGoalForF(), hillArrayF); // Appends the values to the result array hillArrayF
+    }
+}
+
+void populatesecondAlgorithmOutputFromParameterArrayUsingG() {
+    for (int x = 0; x < 256; ++x) { // Iterates from 1-255 as per the requirements of the assignment
+        secondAlgorithmOutputFromParameterArray[x] = iterativeHillClimbing(firstAlgorithmOutputFromParameterArray[x], firstAlgorithmOutputFromParameterArray[x], findGoalForG(), hillArrayG); // Appends the values to the result array hillArrayF
+    }
+}
+
+void runIterativeHillClimbingVaryParamsOnF() {
+    populateMaxIterationParameterArray(); // Populates the max iter. parameter array for use
+    populateNStartParameterArray();       // Populates the n_start parameter array for use
+    populatesecondAlgorithmOutputFromParameterArrayUsingF(); // Populates the output array
+    cout << endl << "Second Algorithm Output From Varying Parameters On F Hill: " << endl;
+    printGivenParameterArray(secondAlgorithmOutputFromParameterArray); // Prints it
+}
+
+void runIterativeHillClimbingVaryParamsOnG() {
+    populateMaxIterationParameterArray(); // Populates the max iter. parameter array for use
+    populateNStartParameterArray();       // Populates the n_start parameter array for use
+    populatesecondAlgorithmOutputFromParameterArrayUsingG(); // Populates the output array
+    cout << endl << "Second Algorithm Output From Varying Parameters On G Hill: " << endl;
+    printGivenParameterArray(secondAlgorithmOutputFromParameterArray); // Prints it
+}
+    // For Third Algorithm ( NOT DONE )
+// STOP  - Varying Parameter Algorithm Running Function
+
+
+
 // START - Accuracy Determining Functions
 double findAccuracyOfHillClimbing(int timesToRun) {
     double wrongCounter = 0; // # of times the function returned the wrong value
@@ -157,7 +283,7 @@ double findAccuracyOfHillClimbing(int timesToRun) {
     }
 
     return wrongCounter / (timesToRun * 2); // Percent of misses (Multiply timesToRun * 2 due to running the function twice per loop cycle)
-}
+} // STATIC PARAMETER TESTING
 
 double findAccuracyOfIterativeHillClimbing(int timesToRun) {
     double wrongCounter = 0; // # of times the function returned the wrong value
@@ -170,20 +296,26 @@ double findAccuracyOfIterativeHillClimbing(int timesToRun) {
     }
 
     return wrongCounter / (timesToRun * 2); // Percent of misses (Multiply timesToRun * 2 due to running the function twice per loop cycle)
-}
+} // STATIC PARAMETER TESTING
 
-double findAccuracyOfStochasticHillClimbing(int timesToRun) {
+double findAccuracyOfStochasticHillClimbing(int timesToRun, double tVal) {
     double wrongCounter = 0; // # of times the function returned the wrong value
 
     for ( int i = 0 ; i <= timesToRun ; i++ ) {
-        double topOfFHillUsingThirdAlg = stochasticHillClimbing(255, 0.000035, findGoalForF(), hillArrayF);
-        double topOfGHillUsingThirdAlg = stochasticHillClimbing(255, 0.000035, findGoalForG(), hillArrayG);
+        double topOfFHillUsingThirdAlg = stochasticHillClimbing(255, tVal, findGoalForF(), hillArrayF);
+        double topOfGHillUsingThirdAlg = stochasticHillClimbing(255, tVal, findGoalForG(), hillArrayG);
         if ( topOfFHillUsingThirdAlg != findGoalForF() ) { wrongCounter++; }
         if ( topOfGHillUsingThirdAlg != findGoalForG() ) { wrongCounter++; }
     }
 
-    return wrongCounter / (timesToRun * 2); // Percent of misses (Multiply timesToRun * 2 due to running the function twice per loop cycle)
-}
+    return (wrongCounter / (timesToRun * 2) ) * 100; // Percent of misses (Multiply timesToRun * 2 due to running the function twice per loop cycle)
+} // STATIC PARAMETER TESTING
+
+// TO DO:
+// - first  algorithm accuracy finding using the parameter array to dynamically test parameters
+// - second algorithm accuracy finding using the parameter array to dynamically test parameters
+// - third  algorithm accuracy finding using the parameter array to dynamically test parameters
+
 // STOP  - Accuracy Determining Functions
 
 
@@ -192,48 +324,10 @@ double findAccuracyOfStochasticHillClimbing(int timesToRun) {
 int main() {
     cout << "Main Function Has Started..." << endl;
 
-    // This code that is commented out is an example that visualizes how the hillArray array is populated
-    // through the use of the console.
-    cout << "Blank Array f(x):" << endl;
-    for (int x = 0; x < 255; ++x) { // Print values of the BLANK array to the console
-        cout << hillArrayF[x] << " "; // No 'endl' so that it prints in one line
-    }
-    cout << endl << "Blank Array g(x):" << endl;
-    for (int x = 0; x < 255; ++x) { // Print values of the BLANK array to the console
-        cout << hillArrayG[x] << " "; // No 'endl' so that it prints in one line
-    }
-
+    printHillArrays(); // Prints both hill arrays BLANK (before population)
     makeValuesF(); // Populates the f(x) hill array
     makeValuesG(); // Populates the g(x) hill array
-
-    cout << endl << "Full Array f(x):" << endl;
-    for (int x = 0; x < 255; ++x) { // Print values of the FULL array to the console
-        cout << hillArrayF[x] << " "; // No 'endl' so that it prints in one line
-    }
-    cout << endl << "Full Array g(x):" << endl;
-    for (int x = 0; x < 255; ++x) { // Print values of the FULL array to the console
-        cout << hillArrayG[x] << " "; // No 'endl' so that it prints in one line
-    }
-
-    cout << endl; // Blank space
-
-    // First Algorithm On f(x) and g(x) hills:
-    double topOfFHillUsingFirstAlg = hillClimbing(255, findGoalForF(), hillArrayF);
-    cout << endl << "(ALG. 1) The top of the f(x) hill is at: " << topOfFHillUsingFirstAlg << " ft." << endl; // Prints the results to the console
-    double topOfGHillUsingFirstAlg = hillClimbing(255, findGoalForG(), hillArrayG);
-    cout << "(ALG. 1) The top of the g(x) hill is at: " << topOfGHillUsingFirstAlg << " ft." << endl; // Prints the results to the console
-
-    // Second Algorithm on f(x) and g(x) hills:
-    double topOfFHillUsingSecondAlg = iterativeHillClimbing(1, 255, findGoalForF(), hillArrayF);
-    cout << endl << "(ALG. 2) The top of the f(x) hill is at: " << topOfFHillUsingSecondAlg << " ft." << endl; // Prints the results to the console
-    double topOfGHillUsingSecondAlg = iterativeHillClimbing(1, 255, findGoalForG(), hillArrayG);
-    cout << "(ALG. 2) The top of the g(x) hill is at: " << topOfGHillUsingSecondAlg << " ft." << endl; // Prints the results to the console
-
-    // Third Algorithm on f(x) and g(x) hills:
-    double topOfFHillUsingThirdAlg = stochasticHillClimbing(255, 0.0000001, findGoalForF(), hillArrayF);
-    cout << endl << "(ALG. 3) The top of the f(x) hill is at: " << topOfFHillUsingThirdAlg << " ft." << endl; // Prints the results to the console
-    double topOfGHillUsingThirdAlg = stochasticHillClimbing(255, 0.0000001, findGoalForG(), hillArrayG);
-    cout << "(ALG. 3) The top of the g(x) hill is at: " << topOfGHillUsingThirdAlg << " ft." << endl; // Prints the results to the console
+    printHillArrays(); // Prints both hill arrays FULL (after population)
 
     // Finds and displays the goals for f and g
     double Fgoal = findGoalForF();
@@ -241,12 +335,43 @@ int main() {
     double Ggoal = findGoalForG();
     cout << endl << "G's Goal: " << Ggoal << endl;
 
+    // Running Each Algorithm Individually on Each Hill Once
+    // First Algorithm On f(x) and g(x) hills:
+    double topOfFHillUsingFirstAlg = hillClimbing(255, findGoalForF(), hillArrayF);
+    cout << endl << "(ALG. 1) The top of the f(x) hill is at: " << topOfFHillUsingFirstAlg << " ft." << endl; // Prints the results to the console
+    double topOfGHillUsingFirstAlg = hillClimbing(255, findGoalForG(), hillArrayG);
+    cout << "(ALG. 1) The top of the g(x) hill is at: " << topOfGHillUsingFirstAlg << " ft." << endl; // Prints the results to the console
+    // Second Algorithm on f(x) and g(x) hills:
+    double topOfFHillUsingSecondAlg = iterativeHillClimbing(1, 255, findGoalForF(), hillArrayF);
+    cout << endl << "(ALG. 2) The top of the f(x) hill is at: " << topOfFHillUsingSecondAlg << " ft." << endl; // Prints the results to the console
+    double topOfGHillUsingSecondAlg = iterativeHillClimbing(1, 255, findGoalForG(), hillArrayG);
+    cout << "(ALG. 2) The top of the g(x) hill is at: " << topOfGHillUsingSecondAlg << " ft." << endl; // Prints the results to the console
+    // Third Algorithm on f(x) and g(x) hills:
+    double topOfFHillUsingThirdAlg = stochasticHillClimbing(255, 0.00001, findGoalForF(), hillArrayF);
+    cout << endl << "(ALG. 3) The top of the f(x) hill is at: " << topOfFHillUsingThirdAlg << " ft." << endl; // Prints the results to the console
+    double topOfGHillUsingThirdAlg = stochasticHillClimbing(255, 0.00001, findGoalForG(), hillArrayG);
+    cout << "(ALG. 3) The top of the g(x) hill is at: " << topOfGHillUsingThirdAlg << " ft." << endl; // Prints the results to the console
+
+    // Finding Miss Percentage of Each Algorithm
     double missPercentageOfFirstAlgorithm = findAccuracyOfHillClimbing(100);
     double missPercentageOfSecondAlgorithm = findAccuracyOfIterativeHillClimbing(100);
-    double missPercentageOfThirdAlgorithm = findAccuracyOfStochasticHillClimbing(100);
-    cout << endl << "Miss Percentage Of HillClimb:  " << missPercentageOfFirstAlgorithm << endl;
-    cout << "Miss Percentage Of Iterative:  " << missPercentageOfSecondAlgorithm << endl;
-    cout << "Miss Percentage Of Stochastic: " << missPercentageOfThirdAlgorithm << endl;
+    double missPercentageOfThirdAlgorithm = findAccuracyOfStochasticHillClimbing(100, 0.0001);
+    cout << endl << "Miss Percentage Of HillClimb:  " << missPercentageOfFirstAlgorithm << "%" << endl;
+    cout << "Miss Percentage Of Iterative:  " << missPercentageOfSecondAlgorithm << "%" << endl;
+    cout << "Miss Percentage Of Stochastic: " << missPercentageOfThirdAlgorithm << "%" << endl << endl;
 
+    // Populating and Printing Each Parameter Array
+    populateMaxIterationParameterArray();
+    populateNStartParameterArray();
+    populateTParameterArray();
+    printGivenParameterArray(maxIterationParameterArray);
+    printGivenParameterArray(nStartParameterArray);
+    printGivenParameterArray(tParameterArray);
+
+    cout << endl;
+    runHillClimbingVaryParamsOnF();
+    runHillClimbingVaryParamsOnG();
+    runIterativeHillClimbingVaryParamsOnF();
+    runIterativeHillClimbingVaryParamsOnG();
 } // End of main function
 // STOP  - Main
