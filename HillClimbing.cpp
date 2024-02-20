@@ -92,9 +92,6 @@ bool findPhi(double currentVal, double nextVal, double T) {
 
 
 // START - Hill Climbing Algorithms
-    // HILL CLIMBING Algorithm # 1:
-    // max_it : max iterations
-    // g      : goal (highest value, the top of hill)
 double hillClimbing(int max_it, double g, double* hillArray) { // FIRST ALGORITHM
     // START - Init. Vars
     int t = 0; // Init. loop var to 1
@@ -109,7 +106,7 @@ double hillClimbing(int max_it, double g, double* hillArray) { // FIRST ALGORITH
         while ( (t < max_it) && (t < hillArrayLength - 1 ) ) { // Iterates over the space, stopping if you reach the max amount of steps or the highest point
             double currentValue = hillArray[t];     // x
             double nextValue    = hillArray[t + 1]; // x' (next x)
-            if ( currentValue == g ) { return currentValue; } // If the current value is the goal, return it
+            if ( currentValue > nextValue ) { return currentValue; } // If the current value is the goal, return it
             else if ( currentValue < nextValue ){ currentValue = nextValue; } // If current value is smaller than the next value, set the current value to the next value
             t++; // Increment t by 1
         }
