@@ -119,7 +119,6 @@ void printHillArrays() {
 
 void printGivenParameterArray(double* array) {
     int array_length = sizeof(array) / sizeof(array[0]);
-    cout << "Parameter Array: " << endl;
     for (int x = 0; x < PARAMETERARRAYLENGTH; ++x) { // Print values of the BLANK array to the console
         cout << array[x] << " "; // No 'endl' so that it prints in one line
     }
@@ -214,13 +213,13 @@ double stochasticHillClimbing(int max_it, double T, double g, double* hillArray)
     // For First Algorithm
 void populatefirstAlgorithmOutputFromParameterArrayUsingF() {
     for (int x = 0; x < 256; ++x) { // Iterates from 1-255 as per the requirements of the assignment
-        firstAlgorithmOutputFromParameterArray[x] = hillClimbing(firstAlgorithmOutputFromParameterArray[x], findGoalForF(), hillArrayF); // Appends the values to the result array hillArrayF
+        firstAlgorithmOutputFromParameterArray[x] = hillClimbing(maxIterationParameterArray[x], findGoalForF(), hillArrayF); // Appends the values to the result array hillArrayF
     }
 }
 
 void populatefirstAlgorithmOutputFromParameterArrayUsingG() {
     for (int x = 0; x < 256; ++x) { // Iterates from 1-255 as per the requirements of the assignment
-        firstAlgorithmOutputFromParameterArray[x] = hillClimbing(firstAlgorithmOutputFromParameterArray[x], findGoalForG(), hillArrayG); // Appends the values to the result array hillArrayF
+        firstAlgorithmOutputFromParameterArray[x] = hillClimbing(maxIterationParameterArray[x], findGoalForG(), hillArrayG); // Appends the values to the result array hillArrayF
     }
 }
 
@@ -241,13 +240,13 @@ void runHillClimbingVaryParamsOnG() {
     // For Second Algorithm
 void populatesecondAlgorithmOutputFromParameterArrayUsingF() {
     for (int x = 0; x < 256; ++x) { // Iterates from 1-255 as per the requirements of the assignment
-        secondAlgorithmOutputFromParameterArray[x] = iterativeHillClimbing(secondAlgorithmOutputFromParameterArray[x], firstAlgorithmOutputFromParameterArray[x], findGoalForF(), hillArrayF); // Appends the values to the result array hillArrayF
+        secondAlgorithmOutputFromParameterArray[x] = iterativeHillClimbing(nStartParameterArray[x], maxIterationParameterArray[x], findGoalForF(), hillArrayF); // Appends the values to the result array hillArrayF
     }
 }
 
 void populatesecondAlgorithmOutputFromParameterArrayUsingG() {
     for (int x = 0; x < 256; ++x) { // Iterates from 1-255 as per the requirements of the assignment
-        secondAlgorithmOutputFromParameterArray[x] = iterativeHillClimbing(firstAlgorithmOutputFromParameterArray[x], firstAlgorithmOutputFromParameterArray[x], findGoalForG(), hillArrayG); // Appends the values to the result array hillArrayF
+        secondAlgorithmOutputFromParameterArray[x] = iterativeHillClimbing(nStartParameterArray[x], maxIterationParameterArray[x], findGoalForG(), hillArrayG); // Appends the values to the result array hillArrayF
     }
 }
 
@@ -266,6 +265,8 @@ void runIterativeHillClimbingVaryParamsOnG() {
     cout << endl << "Second Algorithm Output From Varying Parameters On G Hill: " << endl;
     printGivenParameterArray(secondAlgorithmOutputFromParameterArray); // Prints it
 }
+
+// TO DO:
     // For Third Algorithm ( NOT DONE )
 // STOP  - Varying Parameter Algorithm Running Function
 
@@ -369,8 +370,11 @@ int main() {
     populateMaxIterationParameterArray();
     populateNStartParameterArray();
     populateTParameterArray();
+    cout << "Parmeter Array: ";
     printGivenParameterArray(maxIterationParameterArray);
+    cout << "Parmeter Array: ";
     printGivenParameterArray(nStartParameterArray);
+    cout << "Parmeter Array: ";
     printGivenParameterArray(tParameterArray);
 
     cout << endl;
